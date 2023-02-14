@@ -1,0 +1,94 @@
+<div class="flex flex-col items-center my-8">
+  {% if section.settings.title != blank %}
+    <h2 class="text-3xl font-medium my-8 md:my-16">{{ section.settings.title }}</h2>
+  {% endif %}
+
+  {% form 'contact' %}
+
+    {% if form.errors %}
+      There are errors in your Comment.
+      <div class="border p-5">
+        <div class="flex flex-row items-center w-full my-3">
+          <div class="text-red-500">
+            {% render 'icon-failed' %}
+          </div>
+          <div class="text-sm font-medium ml-3">oh no! Your message is not valid</div>
+        </div>
+        <ul class="px-4 mb-3 ml-7 list-decimal">
+          {% for error in form.errors %}
+            <li>{{ form.errors.messages[error] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    {% elsif form.posted_successfully? %}
+      <div class="flex flex-row items-center w-full my-3 p-5">
+        <div class="text-green-500">
+          {% render 'icon-success' %}
+        </div>
+        <div class="text-sm-font-medium-ml-3">Message was sent uccessfully</div>
+      </div>
+    {% endif %}
+
+    <div class="max-w-6xl mx-auto flex flex-col justify-center items-center px-4">
+      <div class="flex px-1 mb-3">
+        <div class="px-3 md:w-1/2 ">
+          <label for="contact_name" class="uppercase text-xs text-gray-500 font-medium">Name</label>
+          <input
+            type="text"
+            name="contact[name]"
+            id="contact_name"
+            class="border py-3 px-4 mb-3 text-gray-700 w-full"></div>
+        <div class="px-3 md:w-1/2 ">
+          <label for="contact_email" class="uppercase text-xs text-gray-500 font-medium">E-mail</label>
+          <input
+            type="email"
+            name="contact[email]"
+            id="contact_email"
+            class="border py-3 px-4 mb-3 text-gray-700 w-full">
+
+        </div>
+      </div>
+      <div class="flex flex-col w-full px-1 mb-3">
+        <div class="flex flex-col w-full px-3">
+          <label for="contact_body" class="uppercase text-xs text-gray-500 font-medium">Message</label>
+          <textarea
+            type="email"
+            name="contact[body]"
+            id="contact_body"
+            class="w-full h-40 border py-3 px-4 mb-3 text-gray-700"></textarea>
+        </div>
+        <div class="flex justify-center px-1 mb-3">
+          <div class="w-full px-3 flex justify-center">
+            <input
+              type="submit"
+              class="px-4 py-3 bg-gray-400 hover:bg-gray-800 hover:text-white cursor-pointer"
+              value="Submit message">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+  {% endform %}
+</div>
+
+{% schema %}
+  {
+    "name": "Contact Form",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Contact Form"
+      }
+    ]
+  }
+{% endschema %}

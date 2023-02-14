@@ -1,0 +1,117 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+<style>
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: black;
+    top: auto !important;
+    height: 20px !important;
+  }
+  .swiper-button-prev:after,
+  .swiper-button-next:after {
+    font-size: 20px;
+  }
+  .swiper-pagination {
+
+    bottom: 0 !important;
+  }
+  .swiper-pagination-bullet-active {
+    background: black !important;
+  }
+</style>
+
+<div class="max-w-6xl mx-auto m-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div class="product--medias">
+      <div class="hidden md:block">
+        {% for media in product.media %}
+          <div class="h-100 overflow-hidden p-2">
+            {% render 'product-media', media: media %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="md:hidden">
+        <div class="swiper h-94">
+          <div class="swiper-wrapper">
+            {% for media in product.media %}
+              <div class="swiper-slide">
+                <div class="h-80 overflow-hidden p-2">
+                  {% render 'product-media', media: media %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+    </div>
+    <div class="product--information">
+      {% form 'product', product %}
+        <div class="my-3">
+          <span class="text-xs text-gray-500">
+            {{ product.vendor }}
+          </span>
+        </div>
+        <div class="my-3">
+          <h1 class="text-3xl text-gray-900">{{ product.title }}</h1>
+        </div>
+        <div class="my-3">
+          {% assign product_price = product.selected_or_first_available_variant %}
+          <span class="text-xs text-gray-500 line-through">{{ product_price.compare_at_price | money }}</span>
+          <span class="text-lg text-gray-900">{{ product_price.price | money }}</span>
+
+          {% if product_price.price < product_price.compare_at_price %}
+            <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">SALE</span>
+          {% endif %}
+        </div>
+
+        <div class="my-3">
+          {% unless product.has_only_default_variant %}
+            <div data-url="{{ product.url }}" data-section="{{ section.id }}">
+              {% for option in product.options_with_values %}
+                <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
+                <div class="my-2">
+                  <select
+                    class="w-full border py-3 px-3"
+                    name="options[{{ option.name | escape }}]"
+                    id="Option-{{ section.id }}-{{ forloop.index0 }}">
+                    {% for value in option.values %}
+                      <option value="{{ value | escape }}">{{ value }}
+                        {% if option.selected_value == value %}
+                          selected
+                        {% endif %}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              {% endfor %}
+            </div>
+          {% endunless %}
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<script>
+
+  const swiper = new Swiper('.swiper', { // Optional parameters
+    direction: 'horizontal',
+    loop: true,
+
+// If we need pagination
+    pagination: {
+      el: '.swiper-pagination'
+    },
+
+// Navigation arrows
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev'
+    }
+  });
+</script>

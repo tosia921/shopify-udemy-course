@@ -1,20 +1,15 @@
-<article
-  class="max-w-[1024px] m-auto mb-10">
+<article class="max-w-[1024px] m-auto mb-10">
   {%- for block in section.blocks -%}
     {%- case block.type -%}
 
       {%- when 'title' -%}
-      <h1
-        class="text-center py-5 text-2xl font-bold">{{ article.title }}</h1>
+      <h1 class="text-center py-5 text-2xl font-bold">{{ article.title }}</h1>
       {%- when 'author' -%}
-      <p
-        class="text-sm">{{ article.author }}</p>
+      <p class="text-sm">{{ article.author }}</p>
 
       {%- when 'published_date' -%}
-      <div
-        class="mt-10">
-        <time
-          datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%Y-%m-%d' }}</time>
+      <div class="mt-10">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%Y-%m-%d' }}</time>
       </div>
       {%- when 'featured_image' -%}
       <img
@@ -39,65 +34,48 @@
       alt="{{ article.image.alt | escape }}">
 
       {%- when 'content' -%}
-      <div
-        class="flex flex-col gap-2 text-base">{{ article.content }}</div>
+      <div class="flex flex-col gap-2 text-base">{{ article.content }}</div>
   {% else %}
     {%- endcase -%}
   {% endfor %}
 </article>
 
 {% if blog.comments_enabled? %}
-  <div
-    id="comments"
-    class="my-8 max-w-[1024px] m-auto">
+  <div id="comments" class="my-8 max-w-[1024px] m-auto">
     {% if article.comments_count > 0 %}
-      <div
-        class="flex-1 items-center justify-center mx-auto max-w-[1024px]">
-        <h1
-          class="text-lg mb-4 font-medium">See What people are saying</h1>
+      <div class="flex-1 items-center justify-center mx-auto max-w-[1024px]">
+        <h1 class="text-lg mb-4 font-medium">See What people are saying</h1>
 
         {% paginate article.comments by 5 %}
           {% for single_comment in article.comments %}
-            <div
-              class="flex-1 border my-4 leading-relaxed px-2 py-4">
-              <span
-                class="comment-author">{{ single_comment.author }}</span>
-              <span
-                class="text-xs text-gray-400">{{ single_comment.created_at | date: format: 'default' }}</span>
-              <p
-                class="text-sm">{{ single_comment.content }}</p>
+            <div class="flex-1 border my-4 leading-relaxed px-2 py-4">
+              <span class="comment-author">{{ single_comment.author }}</span>
+              <span class="text-xs text-gray-400">{{ single_comment.created_at | date: format: 'default' }}</span>
+              <p class="text-sm">{{ single_comment.content }}</p>
             </div>
           {% endfor %}
-          {% if paginate.pages > 1 %}
-            {{ paginate | default_pagination }}
-          {% endif %}
+          <div class="max-w-6xl mx-auto">
+            {% render 'pagination', pagination: paginate %}
+          </div>
         {% endpaginate %}
       </div>
     {% else %}
       There are no comments
     {% endif %}
   </div>
-  <div
-    id="comment_form"
-    class="mb-10 max-w-[1024px] m-auto">
+  <div id="comment_form" class="mb-10 max-w-[1024px] m-auto">
     {% form 'new_comment', article %}
-      <div
-        class="flex-1 mx-auto items-center justify-center max-w-[1024px]">
+      <div class="flex-1 mx-auto items-center justify-center max-w-[1024px]">
         {% if form.errors %}
           There are errors in your Comment.
-          <div
-            class="border p-5">
-            <div
-              class="flex flex-row items-center w-full my-3">
-              <div
-                class="text-red-500">
+          <div class="border p-5">
+            <div class="flex flex-row items-center w-full my-3">
+              <div class="text-red-500">
                 {% render 'icon-failed' %}
               </div>
-              <div
-                class="text-sm font-medium ml-3">oh no! Your comment was not posted</div>
+              <div class="text-sm font-medium ml-3">oh no! Your comment was not posted</div>
             </div>
-            <ul
-              class="px-4 mb-3 ml-7 list-decimal">
+            <ul class="px-4 mb-3 ml-7 list-decimal">
               {% for error in form.errors %}
                 <li>{{ form.errors.messages[error] }}</li>
               {% endfor %}
@@ -105,23 +83,16 @@
           </div>
 
         {% elsif form.posted_successfully? %}
-          <div
-            class="flex flex-row items-center w-full my-3 p-5">
-            <div
-              class="text-green-500">
+          <div class="flex flex-row items-center w-full my-3 p-5">
+            <div class="text-green-500">
               {% render 'icon-success' %}
             </div>
-            <div
-              class="text-sm-font-medium-ml-3">Comment is posted successfully</div>
+            <div class="text-sm-font-medium-ml-3">Comment is posted successfully</div>
           </div>
         {% endif %}
-        <div
-          class="md:flex mb-3">
-          <div
-            class="md:w-1/2">
-            <label
-              for="comment_author"
-              class="text-gray-700 text-xs uppercase fonr-medium">Name</label>
+        <div class="md:flex mb-3">
+          <div class="md:w-1/2">
+            <label for="comment_author" class="text-gray-700 text-xs uppercase fonr-medium">Name</label>
             <input
               type="text"
               name="comment[author]"
@@ -130,11 +101,8 @@
               placeholder="Your Name..."
               required>
           </div>
-          <div
-            class="px-3 md:w-1/2">
-            <label
-              for="comment_email"
-              class="text-gray-700 text-xs uppercase fonr-medium">Email</label>
+          <div class="px-3 md:w-1/2">
+            <label for="comment_email" class="text-gray-700 text-xs uppercase fonr-medium">Email</label>
             <input
               type="email"
               name="comment[email]"
@@ -144,13 +112,9 @@
               required>
           </div>
         </div>
-        <div
-          class="py-2 md:flex">
-          <div
-            class="md:w-full flex flex-col">
-            <label
-              for="comment_content"
-              class="text-gray-700 font-medium uppercase text-xs mb-2">Comment</label>
+        <div class="py-2 md:flex">
+          <div class="md:w-full flex flex-col">
+            <label for="comment_content" class="text-gray-700 font-medium uppercase text-xs mb-2">Comment</label>
             <textarea
               name="comment[body]"
               id="comment_content"
@@ -158,10 +122,8 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex mb-3">
-        <div
-          class="md:w-full">
+      <div class="flex mb-3">
+        <div class="md:w-full">
           <input
             type="submit"
             value="Post comment"
